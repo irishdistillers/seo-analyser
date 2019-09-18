@@ -1,0 +1,5 @@
+/build
+/vendor
+/bin/*
+!/bin/seo-analyser
+*.sublime-workspace

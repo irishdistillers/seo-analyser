@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    SeoAnalyser\Checker\:
+        resource: './../src/Checker'
+        tags: ['seo_analyser_checker']
+
+    SeoAnalyser\Http\Client: ~
+    SeoAnalyser\Command\AnalyseCommand: ~
+    SeoAnalyser\Processor\LocationProcessor: ~
+    SeoAnalyser\Processor\SitemapProcessor: ~
+  
+    GuzzleHttp\Client: ~

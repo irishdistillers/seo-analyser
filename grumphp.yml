@@ -1,0 +1,9 @@
+parameters:
+  git_dir: .
+  bin_dir: bin
+  tasks:
+    phpstan:
+      level: 4
+      ignore_patterns:
+        - 'tests/'
+    phpcs: ~

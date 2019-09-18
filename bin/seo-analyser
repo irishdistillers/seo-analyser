@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+use SeoAnalyser\Command\AnalyseCommand;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Application;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+require_once './vendor/autoload.php';
+
+$container = new ContainerBuilder;
+$loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../config/'));
+$loader->load('services.yml');
+$container->compile();
+
+$locationProcessorDefinition = $container->findDefinition(\SeoAnalyser\Processor\LocationProcessor::class);
+foreach ($container->findTaggedServiceIds('seo_analyser_checker') as $id => $definition) {
+    $definition = $container->getDefinition($id);
+    $locationProcessorDefinition->addMethodCall('addChecker', [$definition]);
+}
+
+$version = 'Version unknown';
+try {
+    $version = \Jean85\PrettyVersions::getVersion('irishdistillers/seo-analyser')->getPrettyVersion();
+} catch (\OutOfBoundsException $e) {
+}
+
+$clientDefinition = $container->findDefinition(\SeoAnalyser\Http\Client::class);
+$clientDefinition->addMethodCall('setCliVersion', [$version]);
+
+$application = new Application('SEO Analyser', $version);
+$application->add($container->get(AnalyseCommand::class));
+$application->run();
