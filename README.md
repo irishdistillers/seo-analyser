@@ -13,7 +13,7 @@ composer require -g irishdistillers/seo-analyser
 or locally for a project with
 
 ```
-composer require irishdistillers/seo-analyser
+composer require --dev irishdistillers/seo-analyser
 ```
 
 Usage
