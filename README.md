@@ -32,3 +32,13 @@ bin/seo-analyser analyse http://example.com/sitemap.xml -a user:pwd@domain.com -
 ```
 
 so that any requests to `domain.com` or `subdomain.example.com` will have basic authentication.
+
+Adding new checks
+-----------------
+
+Create a new class in `src\Checker` that implements `SeoAnalyser\Checker\CheckerInterface`.
+
+The `check()` method receives a `Symfony\Component\DomCrawler\Crawler` with the HTML of a page and should return a
+`Tightenco\Collect\Support\Collection` of `SeoAnalyser\Sitemap\Error`, one for each infraction. If no errors found
+simply return an empty collection. Each `Error` contains a description and a severity: `SEVERITY_LOW`,
+`SEVERITY_NORMAL`, or `SEVERITY_HIGH`.
