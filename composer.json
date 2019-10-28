@@ -43,7 +43,8 @@
         "test": [
             "bin/phpunit",
             "bin/phpstan analyse --level=4 src/",
-            "bin/phpcs src/"
+            "bin/phpcs src/",
+            "bin/phpcs tests/"
         ],
         "coverage": [
             "bin/phpunit --coverage-html=build/coverage"
