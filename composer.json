@@ -10,6 +10,7 @@
         "symfony/console": "^3.4",
         "symfony/dependency-injection": "^3.4",
         "symfony/dom-crawler": "^3.4",
+        "symfony/validator": "^3.4",
         "tightenco/collect": "^5.5"
     },
     "require-dev": {
@@ -42,7 +43,8 @@
         "test": [
             "bin/phpunit",
             "bin/phpstan analyse --level=4 src/",
-            "bin/phpcs src/"
+            "bin/phpcs src/",
+            "bin/phpcs tests/"
         ],
         "coverage": [
             "bin/phpunit --coverage-html=build/coverage"
