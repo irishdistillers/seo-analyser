@@ -31,8 +31,6 @@ class MetaDescriptionChecker implements CheckerInterface
         $this->crawler = $crawler;
 
         $this->checkField('description');
-        $this->checkField('og:description', 'property');
-        $this->checkField('twitter:description');
 
         return $this->errors;
     }
