@@ -10,6 +10,7 @@
         "symfony/console": "^3.4",
         "symfony/dependency-injection": "^3.4",
         "symfony/dom-crawler": "^3.4",
+        "symfony/lock": "^3.4",
         "symfony/validator": "^3.4",
         "tightenco/collect": "^5.5"
     },
