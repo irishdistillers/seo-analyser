@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace SeoAnalyser\Command;
 
@@ -13,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\SemaphoreStore;
 use Tightenco\Collect\Support\Collection;
 
 class AnalyseCommand extends Command
@@ -54,7 +58,7 @@ class AnalyseCommand extends Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -65,41 +69,60 @@ class AnalyseCommand extends Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $this->httpClient->configAuth($input->getOption('auth'));
-        } catch (InvalidAuthOptionException $exception) {
-            $output->writeln($exception->getMessage());
-            return 1;
-        }
+        $store = new SemaphoreStore();
+        $factory = new Factory($store);
 
-        $sitemaps = $this->processSitemaps($input->getArgument('sitemap_url'), $output);
+        $lockName = preg_replace('/\W+/', '_', $input->getArgument('sitemap_url'));
+        $lock = $factory->createLock($lockName);
 
-        foreach ($sitemaps as $sitemap) {
-            $this->printErrors($sitemap, $output);
-        }
+        if ($lock->acquire()) {
+            try {
+                $this->httpClient->configAuth($input->getOption('auth'));
+            } catch (InvalidAuthOptionException $exception) {
+                $output->writeln($exception->getMessage());
 
-        $totalErrors = 0;
-        foreach ($sitemaps as $sitemap) {
-            foreach ($sitemap->getLocations() as $location) {
-                $this->locationProcessor->process($location, $output);
-                $this->printErrors($location, $output);
-
-                $totalErrors += count($location->getErrors());
+                return 1;
             }
+
+            $sitemaps = $this->processSitemaps($input->getArgument('sitemap_url'), $output);
+
+            foreach ($sitemaps as $sitemap) {
+                $this->printErrors($sitemap, $output);
+            }
+
+            $totalErrors = 0;
+            foreach ($sitemaps as $sitemap) {
+                foreach ($sitemap->getLocations() as $location) {
+                    $this->locationProcessor->process($location, $output);
+                    $this->printErrors($location, $output);
+
+                    $totalErrors += count($location->getErrors());
+                }
+            }
+
+            $output->writeln(sprintf('%d URL errors found', $totalErrors));
+
+            return ($this->countErrors($sitemaps) === 0 && $totalErrors === 0) ? 0 : 1;
+
+            $lock->release();
+        } else {
+            $output->writeln(
+                sprintf(
+                    'Busy, already analysing %s ... Aborting!',
+                    $input->getArgument('sitemap_url')
+                )
+            );
         }
-
-        $output->writeln(sprintf('%d URL errors found', $totalErrors));
-
-        return ($this->countErrors($sitemaps) === 0 && $totalErrors === 0) ? 0 : 1;
     }
 
     /**
-     * @param  string          $url
-     * @param  OutputInterface $output
+     * @param string          $url
+     * @param OutputInterface $output
+     *
      * @return Collection
      */
     public function processSitemaps(string $url, OutputInterface $output): Collection
@@ -122,8 +145,8 @@ class AnalyseCommand extends Command
     }
 
     /**
-     * @param  ResourceInterface $resource
-     * @param  OutputInterface   $output
+     * @param ResourceInterface $resource
+     * @param OutputInterface   $output
      */
     private function printErrors(ResourceInterface $resource, OutputInterface $output)
     {
@@ -145,7 +168,8 @@ class AnalyseCommand extends Command
     }
 
     /**
-     * @param  Collection $collection
+     * @param Collection $collection
+     *
      * @return int
      */
     private function countErrors(Collection $collection): int
