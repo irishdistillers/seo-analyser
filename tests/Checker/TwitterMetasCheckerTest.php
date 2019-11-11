@@ -227,7 +227,7 @@ class TwitterMetasCheckerTest extends TestCase
     /**
      * @dataProvider provideGoodMetas
      */
-    public function testIsFieldAvailableReturnsCrawler($metas)
+    public function testIsMetaAvailableReturnsCrawler($metas)
     {
         $crawler = new Crawler(
             "<html>
@@ -240,10 +240,10 @@ class TwitterMetasCheckerTest extends TestCase
         $checker = new TwitterMetasChecker();
         $checker->check($crawler);
 
-        $xpath = $checker->isFieldAvailable('twitter:site', 'name');
+        $xpath = $checker->isMetaAvailable('twitter:site', 'name');
         $this->assertNotEmpty($xpath->attr('content'));
 
-        $xpath = $checker->isFieldAvailable('twitter:sitexxx', 'name');
+        $xpath = $checker->isMetaAvailable('twitter:sitexxx', 'name');
         $this->assertEmpty($xpath->attr('content'));
     }
 }

@@ -42,29 +42,29 @@ class OpenGraphMetasChecker implements CheckerInterface
         $this->errors = new Collection();
         $this->crawler = $crawler;
 
-        $xpath = $this->isFieldAvailable('og:locale', 'property');
+        $xpath = $this->isMetaAvailable('og:locale', 'property');
         if (!empty($xpath->attr('content'))) {
             $this->validateOgLocale('og:locale', $xpath);
         }
 
-        $xpath = $this->isFieldAvailable('og:restrictions:content', 'property');
+        $xpath = $this->isMetaAvailable('og:restrictions:content', 'property');
         if (!empty($xpath->attr('content'))) {
             $this->validateOgRestrictionsContent('og:restrictions:content', $xpath);
         }
 
-        $xpath = $this->isFieldAvailable('og:url', 'property');
+        $xpath = $this->isMetaAvailable('og:url', 'property');
         if (!empty($xpath->attr('content'))) {
             $this->validateOgUrl('og:url', $xpath);
         }
 
-        $xpath = $this->isFieldAvailable('og:description', 'property');
+        $xpath = $this->isMetaAvailable('og:description', 'property');
         if (!empty($xpath->attr('content'))) {
             $this->validateOgDescription('og:description', $xpath);
         }
 
-        $this->isFieldAvailable('og:site_name', 'property');
-        $this->isFieldAvailable('og:type', 'property');
-        $this->isFieldAvailable('og:title', 'property');
+        $this->isMetaAvailable('og:site_name', 'property');
+        $this->isMetaAvailable('og:type', 'property');
+        $this->isMetaAvailable('og:title', 'property');
 
         return $this->errors;
     }

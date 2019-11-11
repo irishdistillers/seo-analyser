@@ -13,7 +13,7 @@ trait TraitChecker
     /**
      * {@inheritdoc}
      */
-    public function isFieldAvailable(
+    public function isMetaAvailable(
         string $fieldTagName,
         string $fieldType = 'name'
     ): Crawler {

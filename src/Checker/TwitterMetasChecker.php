@@ -39,18 +39,18 @@ class TwitterMetasChecker implements CheckerInterface
         $this->errors = new Collection();
         $this->crawler = $crawler;
 
-        $xpath = $this->isFieldAvailable('twitter:site', 'name');
+        $xpath = $this->isMetaAvailable('twitter:site', 'name');
         if (!empty($xpath->attr('content'))) {
             $this->validateTwitterSite('twitter:site', $xpath);
         }
 
-        $xpath = $this->isFieldAvailable('twitter:creator', 'name');
+        $xpath = $this->isMetaAvailable('twitter:creator', 'name');
         if (!empty($xpath->attr('content'))) {
             $this->validateTwitterCreator('twitter:creator', $xpath);
         }
 
-        $this->isFieldAvailable('twitter:card', 'name');
-        $this->isFieldAvailable('twitter:title', 'name');
+        $this->isMetaAvailable('twitter:card', 'name');
+        $this->isMetaAvailable('twitter:title', 'name');
 
         return $this->errors;
     }

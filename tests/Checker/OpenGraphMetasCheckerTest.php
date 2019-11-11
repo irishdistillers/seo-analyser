@@ -416,7 +416,7 @@ class OpenGraphMetasCheckerTest extends TestCase
     /**
      * @dataProvider provideGoodMetas
      */
-    public function testIsFieldAvailableReturnsCrawler($metas)
+    public function testIsMetaAvailableReturnsCrawler($metas)
     {
         $crawler = new Crawler(
             "<html>
@@ -429,10 +429,10 @@ class OpenGraphMetasCheckerTest extends TestCase
         $checker = new OpenGraphMetasChecker();
         $checker->check($crawler);
 
-        $xpath = $checker->isFieldAvailable('og:site_name', 'property');
+        $xpath = $checker->isMetaAvailable('og:site_name', 'property');
         $this->assertNotEmpty($xpath->attr('content'));
 
-        $xpath = $checker->isFieldAvailable('og:site_namexxx', 'property');
+        $xpath = $checker->isMetaAvailable('og:site_namexxx', 'property');
         $this->assertEmpty($xpath->attr('content'));
     }
 }
