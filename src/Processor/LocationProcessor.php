@@ -1,9 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace SeoAnalyser\Processor;
 
 use GuzzleHttp\Exception\RequestException;
 use SeoAnalyser\Checker\CheckerInterface;
+use SeoAnalyser\Checker\LinksCheckerInterface;
 use SeoAnalyser\Http\Client;
 use SeoAnalyser\Sitemap\Location;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +31,7 @@ class LocationProcessor
     {
         $this->client = $client;
 
-        $this->checkers = new Collection;
+        $this->checkers = new Collection();
     }
 
     /**
@@ -40,8 +43,8 @@ class LocationProcessor
     }
 
     /**
-     * @param  Location        $location
-     * @param  OutputInterface $output
+     * @param Location        $location
+     * @param OutputInterface $output
      */
     public function process(Location $location, OutputInterface $output)
     {
@@ -49,14 +52,21 @@ class LocationProcessor
 
         try {
             $response = $this->client->get($location->getUrl());
+
             if ($response->getStatusCode() !== 200) {
                 $this->createRequestError($location, $response);
-                return ;
+
+                return;
             }
 
             $crawler = new Crawler((string) $response->getBody());
 
             foreach ($this->checkers as $checker) {
+                if ($checker instanceof LinksCheckerInterface) {
+                    $checker->setCurrentUrl($location->getUrl());
+                    $checker->setClient($this->client);
+                }
+
                 $location->addErrors($checker->check($crawler));
             }
         } catch (RequestException $exception) {
