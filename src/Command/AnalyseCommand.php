@@ -65,7 +65,7 @@ class AnalyseCommand extends Command
                 'checkers',
                 'c',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'List of checkers to use (ie: -c H1 -c ImageAlt)',
+                'List of checkers to use (see the `list-checkers` command for a full list)',
                 []
             )
         ;
