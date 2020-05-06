@@ -33,6 +33,12 @@ bin/seo-analyser analyse http://example.com/sitemap.xml -a user:pwd@domain.com -
 
 so that any requests to `domain.com` or `subdomain.example.com` will have basic authentication.
 
+You can pick which checkers to use with the `-c` flag:
+
+```
+bin/seo-analyser analyse http://example.com/sitemap.xml -c H1 -c Title
+```
+
 Adding new checks
 -----------------
 

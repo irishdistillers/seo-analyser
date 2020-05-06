@@ -55,7 +55,7 @@ class TwitterMetasCheckerTest extends TestCase
 
         $this->assertCount(4, $errors);
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             'name <twitter:site> is not available!',
             $errors->get(0)->getDescription()
         );
@@ -64,7 +64,7 @@ class TwitterMetasCheckerTest extends TestCase
             $errors->get(0)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'name <twitter:creator> is not available!',
             $errors->get(1)->getDescription()
         );
@@ -74,7 +74,7 @@ class TwitterMetasCheckerTest extends TestCase
             $errors->get(1)->getSeverity()
         );
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             'name <twitter:card> is not available!',
             $errors->get(2)->getDescription()
         );
@@ -84,7 +84,7 @@ class TwitterMetasCheckerTest extends TestCase
             $errors->get(2)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'name <twitter:title> is not available!',
             $errors->get(3)->getDescription()
         );
@@ -114,7 +114,7 @@ class TwitterMetasCheckerTest extends TestCase
 
         $this->assertCount(4, $errors);
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <twitter:site> tag! You should only have one!',
             $errors->get(0)->getDescription()
         );
@@ -124,7 +124,7 @@ class TwitterMetasCheckerTest extends TestCase
             $errors->get(0)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <twitter:creator> tag! You should only have one!',
             $errors->get(1)->getDescription()
         );
@@ -134,7 +134,7 @@ class TwitterMetasCheckerTest extends TestCase
             $errors->get(1)->getSeverity()
         );
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <twitter:card> tag! You should only have one!',
             $errors->get(2)->getDescription()
         );
@@ -144,7 +144,7 @@ class TwitterMetasCheckerTest extends TestCase
             $errors->get(2)->getSeverity()
         );
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <twitter:title> tag! You should only have one!',
             $errors->get(3)->getDescription()
         );
@@ -176,7 +176,7 @@ class TwitterMetasCheckerTest extends TestCase
 
         $this->assertCount(1, $errors);
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<twitter:site> format is wrong',
             $errors->get(0)->getDescription()
         );
@@ -213,7 +213,7 @@ class TwitterMetasCheckerTest extends TestCase
 
         $this->assertCount(1, $errors);
         
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<twitter:creator> format is wrong.',
             $errors->get(0)->getDescription()
         );

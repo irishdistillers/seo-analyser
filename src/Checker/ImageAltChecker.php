@@ -8,6 +8,8 @@ use Tightenco\Collect\Support\Collection;
 
 class ImageAltChecker implements CheckerInterface
 {
+    use CheckerNameTrait;
+
     /**
      * {@inheritDoc}
      */

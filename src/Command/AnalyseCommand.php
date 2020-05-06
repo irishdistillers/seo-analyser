@@ -61,6 +61,13 @@ class AnalyseCommand extends Command
         $this
             ->addArgument('sitemap_url', InputArgument::REQUIRED, 'Sitemap URL')
             ->addOption('auth', 'a', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'user:pwd@host', [])
+            ->addOption(
+                'checkers',
+                'c',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'List of checkers to use (ie: -c H1 -c ImageAlt)',
+                []
+            )
         ;
     }
 
@@ -75,6 +82,23 @@ class AnalyseCommand extends Command
             $output->writeln($exception->getMessage());
             return 1;
         }
+
+        $filterCheckers = $input->getOption('checkers');
+        if (!empty($filterCheckers)) {
+            $this->locationProcessor->filterCheckers($filterCheckers);
+        }
+
+        $output->writeln(
+            sprintf(
+                'Using checkers: %s',
+                implode(
+                    ', ',
+                    $this->locationProcessor->getCheckers()->map(function ($checker) {
+                        return $checker->getName();
+                    })->toArray()
+                )
+            )
+        );
 
         $sitemaps = $this->processSitemaps($input->getArgument('sitemap_url'), $output);
 

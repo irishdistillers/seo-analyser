@@ -8,6 +8,8 @@ use Tightenco\Collect\Support\Collection;
 
 class TitleChecker implements CheckerInterface
 {
+    use CheckerNameTrait;
+
     /**
      * {@inheritDoc}
      */

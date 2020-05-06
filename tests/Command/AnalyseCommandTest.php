@@ -19,10 +19,10 @@ use Tightenco\Collect\Support\Collection;
 
 class AnalyseCommandTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockSitemapProcessor = Mockery::mock(SitemapProcessor::class);
-        $this->mockLocationProcessor = Mockery::mock(LocationProcessor::class);
+        $this->mockLocationProcessor = Mockery::mock(LocationProcessor::class, ['getCheckers' => new Collection([])]);
         $this->mockClient = Mockery::mock(Client::class);
 
         $application = new Application();
@@ -74,6 +74,7 @@ class AnalyseCommandTest extends TestCase
 
         $this->assertEquals(1, $this->commandTester->getStatusCode());
         $this->assertEquals(<<<OUT
+Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 0 urls (1 errors)
 Found 1 errors for http://example.com/sitemap.xml
@@ -116,6 +117,7 @@ OUT
 
         $this->assertEquals(1, $this->commandTester->getStatusCode());
         $this->assertEquals(<<<OUT
+Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 1 urls (0 errors)
 Found 2 errors for http://example.com/page-one
@@ -157,6 +159,7 @@ OUT
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertEquals(<<<OUT
+Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 1 urls (0 errors)
 0 URL errors found
@@ -165,7 +168,7 @@ OUT
 , $output);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

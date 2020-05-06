@@ -10,6 +10,8 @@ use Tightenco\Collect\Support\Collection;
 
 class MetaDescriptionChecker implements CheckerInterface
 {
+    use CheckerNameTrait;
+
     const LIMIT_CONTENT = 160;
 
     /**

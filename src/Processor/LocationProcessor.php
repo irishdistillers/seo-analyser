@@ -39,6 +39,24 @@ class LocationProcessor
         $this->checkers->push($checker);
     }
 
+    public function getCheckers(): Collection
+    {
+        return $this->checkers;
+    }
+
+    /**
+     * Disables all checkers but the ones described in `$checkersToKeep`.
+     * Elements of the `$checkersToKeep` array should be the name of the checker minus the `Checker` bit.
+     *
+     * @param  array  $checkersToKeep
+     */
+    public function filterCheckers(array $checkersToKeep)
+    {
+        $this->checkers = $this->checkers->filter(function ($checker) use ($checkersToKeep) {
+            return in_array($checker->getName(), $checkersToKeep);
+        });
+    }
+
     /**
      * @param  Location        $location
      * @param  OutputInterface $output

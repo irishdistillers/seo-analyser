@@ -8,6 +8,8 @@ use Tightenco\Collect\Support\Collection;
 
 class H1Checker implements CheckerInterface
 {
+    use CheckerNameTrait;
+
     /**
      * {@inheritDoc}
      */

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SeoAnalyser\Checker;
 
 use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Traits\TraitChecker;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
@@ -13,7 +12,7 @@ use Tightenco\Collect\Support\Collection;
 
 class OpenGraphMetasChecker implements CheckerInterface
 {
-    use TraitChecker;
+    use CheckerNameTrait, FieldTrait, ValidatorTrait;
 
     const DEFAULT_OG_RESTRICTIONS_CONTENT = 'alcohol';
     const LIMIT_CONTENT = 160;

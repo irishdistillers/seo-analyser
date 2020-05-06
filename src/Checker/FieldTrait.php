@@ -1,18 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
-namespace SeoAnalyser\Traits;
+namespace SeoAnalyser\Checker;
 
 use SeoAnalyser\Sitemap\Error;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Validator\ConstraintViolationList;
 
-trait TraitChecker
+trait FieldTrait
 {
-    /**
-     * {@inheritdoc}
-     */
     public function isFieldAvailable(
         string $fieldTagName,
         string $fieldType = 'name'
@@ -43,21 +37,5 @@ trait TraitChecker
         }
 
         return $xpath;
-    }
-
-    public function pushViolationsErrors(
-        ConstraintViolationList $violations,
-        string $severity
-    ) {
-        if (0 !== count($violations)) {
-            foreach ($violations as $violation) {
-                $this->errors->push(
-                    new Error(
-                        $violation->getMessage(),
-                        $severity
-                    )
-                );
-            }
-        }
     }
 }
