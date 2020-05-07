@@ -50,7 +50,7 @@ class MetaDescriptionCheckerTest extends TestCase
         $errors = $checker->check($crawler);
 
         $this->assertCount(1, $errors);
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<description> tag should not be longer',
             $errors->get(0)->getDescription()
         );
@@ -72,7 +72,7 @@ class MetaDescriptionCheckerTest extends TestCase
         $errors = $checker->check($crawler);
 
         $this->assertCount(1, $errors);
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <description> tag',
             $errors->get(0)->getDescription()
         );
@@ -91,7 +91,7 @@ class MetaDescriptionCheckerTest extends TestCase
         $errors = $checker->check($crawler);
 
         $this->assertCount(1, $errors);
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<description> tag is not available!',
             $errors->get(0)->getDescription()
         );

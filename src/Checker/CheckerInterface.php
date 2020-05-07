@@ -8,6 +8,13 @@ use Tightenco\Collect\Support\Collection;
 interface CheckerInterface
 {
     /**
+     * Returns the name of the checker
+     *
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
      * Checks the page and returns a Collection of Error
      *
      * @param  Crawler $crawler

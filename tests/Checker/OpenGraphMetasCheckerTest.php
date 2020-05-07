@@ -58,7 +58,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(7, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:locale> is not available!',
             $errors->get(0)->getDescription()
         );
@@ -67,7 +67,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(0)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:restrictions:content> is not available!',
             $errors->get(1)->getDescription()
         );
@@ -77,7 +77,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(1)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:url> is not available!',
             $errors->get(2)->getDescription()
         );
@@ -87,7 +87,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(2)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:description> is not available!',
             $errors->get(3)->getDescription()
         );
@@ -97,7 +97,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(3)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:site_name> is not available!',
             $errors->get(4)->getDescription()
         );
@@ -107,7 +107,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(4)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:type> is not available!',
             $errors->get(5)->getDescription()
         );
@@ -117,7 +117,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(5)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'property <og:title> is not available!',
             $errors->get(6)->getDescription()
         );
@@ -147,7 +147,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(7, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:locale> tag! You should only have one!',
             $errors->get(0)->getDescription()
         );
@@ -157,7 +157,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(0)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:restrictions:content> tag! You should only have one!',
             $errors->get(1)->getDescription()
         );
@@ -167,7 +167,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(1)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:url> tag! You should only have one!',
             $errors->get(2)->getDescription()
         );
@@ -177,7 +177,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(2)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:description> tag! You should only have one!',
             $errors->get(3)->getDescription()
         );
@@ -187,7 +187,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(3)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:site_name> tag! You should only have one!',
             $errors->get(4)->getDescription()
         );
@@ -197,7 +197,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(4)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:type> tag! You should only have one!',
             $errors->get(5)->getDescription()
         );
@@ -207,7 +207,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(5)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Too many <og:title> tag! You should only have one!',
             $errors->get(6)->getDescription()
         );
@@ -244,7 +244,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(1, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<og:description> tag must be at least 10 characters long. Only 1 characters found.',
             $errors->get(0)->getDescription()
         );
@@ -274,7 +274,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(1, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<og:description> tag should not be longer than',
             $errors->get(0)->getDescription()
         );
@@ -318,7 +318,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(2, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<og:locale> format is wrong.',
             $errors->get(0)->getDescription()
         );
@@ -328,7 +328,7 @@ class OpenGraphMetasCheckerTest extends TestCase
             $errors->get(0)->getSeverity()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'This value should have exactly',
             $errors->get(1)->getDescription()
         );
@@ -365,7 +365,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(1, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<og:restrictions:content> should be',
             $errors->get(0)->getDescription()
         );
@@ -402,7 +402,7 @@ class OpenGraphMetasCheckerTest extends TestCase
 
         $this->assertCount(1, $errors);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<og:url> is not a valid url',
             $errors->get(0)->getDescription()
         );

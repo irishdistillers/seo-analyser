@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SeoAnalyser\Checker;
 
 use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Traits\TraitChecker;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
@@ -13,7 +12,7 @@ use Tightenco\Collect\Support\Collection;
 
 class TwitterMetasChecker implements CheckerInterface
 {
-    use TraitChecker;
+    use CheckerNameTrait, FieldTrait, ValidatorTrait;
 
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
@@ -59,16 +58,13 @@ class TwitterMetasChecker implements CheckerInterface
     {
         $message = 'set to '.$xpath->attr('content').' instead of @twitterhandler';
         $validator = Validation::createValidator();
-        $violations = $validator->validate(
-            $xpath->attr('content'),
-            [
-                new Assert\Regex([
-                    'pattern' => '/@\w+/',
-                    'match' => true,
-                    'message' => "<$fieldTagName> format is wrong. $message",
-                ]),
-            ]
-        );
+        $violations = $validator->validate($xpath->attr('content'), [
+            new Assert\Regex([
+                'pattern' => '/@\w+/',
+                'match' => true,
+                'message' => "<$fieldTagName> format is wrong. $message",
+            ])
+        ]);
 
         $this->pushViolationsErrors(
             $violations,
@@ -80,16 +76,13 @@ class TwitterMetasChecker implements CheckerInterface
     {
         $message = 'set to '.$xpath->attr('content').' instead of @twitterhandler';
         $validator = Validation::createValidator();
-        $violations = $validator->validate(
-            $xpath->attr('content'),
-            [
-                new Assert\Regex([
-                    'pattern' => '/@\w+/',
-                    'match' => true,
-                    'message' => "<$fieldTagName> format is wrong. $message",
-                ]),
-            ]
-        );
+        $violations = $validator->validate($xpath->attr('content'), [
+            new Assert\Regex([
+                'pattern' => '/@\w+/',
+                'match' => true,
+                'message' => "<$fieldTagName> format is wrong. $message",
+            ])
+        ]);
 
         $this->pushViolationsErrors(
             $violations,

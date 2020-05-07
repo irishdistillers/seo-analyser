@@ -2,6 +2,7 @@
 <?php declare(strict_types=1);
 
 use SeoAnalyser\Command\AnalyseCommand;
+use SeoAnalyser\Command\ListCheckersCommand;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,4 +32,5 @@ $clientDefinition->addMethodCall('setCliVersion', [$version]);
 
 $application = new Application('SEO Analyser', $version);
 $application->add($container->get(AnalyseCommand::class));
+$application->add($container->get(ListCheckersCommand::class));
 $application->run();

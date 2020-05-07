@@ -9,6 +9,7 @@ services:
 
     SeoAnalyser\Http\Client: ~
     SeoAnalyser\Command\AnalyseCommand: ~
+    SeoAnalyser\Command\ListCheckersCommand: ~
     SeoAnalyser\Processor\LocationProcessor: ~
     SeoAnalyser\Processor\SitemapProcessor: ~
   

@@ -65,11 +65,10 @@ class ClientTest extends TestCase
         $this->assertEquals('Basic '.base64_encode('user:pwd'), $headers['Authorization'][0]);
     }
 
-    /**
-     * @expectedException SeoAnalyser\Exception\InvalidAuthOptionException
-     */
     public function testConfigAuthException()
     {
+        $this->expectException(InvalidAuthOptionException::class);
+
         $client = new Client(new GuzzleClient);
         $client->configAuth(['not.even.close']);
     }
