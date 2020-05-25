@@ -32,12 +32,16 @@ class SitemapProcessor
      * @param  OutputInterface $output
      * @return Collection
      */
-    public function process(string $url, OutputInterface $output): Collection
+    public function process(string $url, OutputInterface $output, Sitemap $parentSitemap = null): Collection
     {
         $output->writeln('Retrieving '.$url, OutputInterface::VERBOSITY_VERBOSE);
         $sitemaps = new Collection;
 
         $sitemap = new Sitemap($url);
+
+        if (!empty($parentSitemap)) {
+            $sitemap->setParent($parentSitemap);
+        }
 
         try {
             $response = $this->client->get($url);
@@ -55,11 +59,11 @@ class SitemapProcessor
             }
             
             foreach ($doc->sitemap as $docSitemap) {
-                $sitemaps = $sitemaps->merge($this->process((string) $docSitemap->loc, $output));
+                $sitemaps = $sitemaps->merge($this->process((string) $docSitemap->loc, $output, $sitemap));
             }
 
-            foreach ($doc->url as $url) {#
-                $sitemap->addLocation(new Location((string) $url->loc));
+            foreach ($doc->url as $url) {
+                $sitemap->addLocation(new Location((string) $url->loc, $sitemap));
             }
         } catch (RequestException $exception) {
             $this->logExceptionError($sitemap, $exception);
@@ -70,7 +74,7 @@ class SitemapProcessor
 
     private function logExceptionError(Sitemap $sitemap, RequestException $exception)
     {
-        if ($response = $exception->getResponse()) {
+        if ($exception->getResponse()) {
             $this->createRequestError($sitemap, $exception->getResponse());
             return;
         }

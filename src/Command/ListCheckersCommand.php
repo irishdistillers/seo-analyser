@@ -39,5 +39,7 @@ class ListCheckersCommand extends Command
         $this->locationProcessor->getCheckers()->each(function ($checker) use ($output) {
             $output->writeln(' - '.$checker->getName());
         });
+
+        return 0;
     }
 }

@@ -21,6 +21,11 @@ class Sitemap implements ResourceInterface
      */
     protected $errors;
 
+    /**
+     * @var ResourceInterface
+     */
+    protected $parent;
+
     public function __construct(string $url)
     {
         $this->url = $url;
@@ -62,5 +67,20 @@ class Sitemap implements ResourceInterface
     public function getErrors(): Collection
     {
         return $this->errors;
+    }
+
+    public function hasParent(): bool
+    {
+        return !empty($this->parent);
+    }
+
+    public function setParent(ResourceInterface $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent(): ResourceInterface
+    {
+        return $this->parent;
     }
 }

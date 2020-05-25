@@ -18,10 +18,10 @@ class ImageAltCheckerTest extends TestCase
         );
         $errors = $checker->check($crawler);
         $this->assertCount(2, $errors);
-        $this->assertEquals('Missing or empty <img> alt attribute for two.jpg', $errors->get(0)->getDescription());
+        $this->assertEquals('Empty <img> alt attribute for two.jpg', $errors->get(0)->getDescription());
         $this->assertEquals(Error::SEVERITY_LOW, $errors->get(0)->getSeverity());
 
-        $this->assertEquals('Missing or empty <img> alt attribute for three.jpg', $errors->get(1)->getDescription());
+        $this->assertEquals('Missing <img> alt attribute for three.jpg', $errors->get(1)->getDescription());
         $this->assertEquals(Error::SEVERITY_LOW, $errors->get(1)->getSeverity());
     }
 }

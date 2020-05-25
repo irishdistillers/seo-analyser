@@ -2,6 +2,7 @@
 
 namespace SeoAnalyser\Command;
 
+use SeoAnalyser\Sitemap\Sitemap;
 use SeoAnalyser\Exception\InvalidAuthOptionException;
 use SeoAnalyser\Http\Client;
 use SeoAnalyser\Processor\LocationProcessor;
@@ -153,7 +154,12 @@ class AnalyseCommand extends Command
     {
         if ($resource->hasErrors()) {
             $output->writeln(
-                sprintf('Found %d errors for %s', count($resource->getErrors()), $resource->getUrl())
+                sprintf(
+                    'Found %d errors for %s (parent: %s)',
+                    count($resource->getErrors()),
+                    $resource->getUrl(),
+                    $resource->hasParent() ? $resource->getParent()->getUrl() : 'None'
+                )
             );
 
             $table = new Table($output);
