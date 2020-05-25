@@ -8,7 +8,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use SeoAnalyser\Exception\InvalidAuthOptionException;
+use SeoAnalyser\Exception\InvalidOptionException;
 use SeoAnalyser\Http\Client;
 
 class ClientTest extends TestCase
@@ -67,7 +67,7 @@ class ClientTest extends TestCase
 
     public function testConfigAuthException()
     {
-        $this->expectException(InvalidAuthOptionException::class);
+        $this->expectException(InvalidOptionException::class);
 
         $client = new Client(new GuzzleClient);
         $client->configAuth(['not.even.close']);

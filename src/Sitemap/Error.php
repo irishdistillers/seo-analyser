@@ -2,6 +2,11 @@
 
 namespace SeoAnalyser\Sitemap;
 
+use JMS\Serializer\Annotation;
+
+/**
+ * @Annotation\ExclusionPolicy("all")
+ */
 class Error
 {
     /**
@@ -21,11 +26,15 @@ class Error
 
     /**
      * @var string
+     * @Annotation\Expose
+     * @Annotation\Type("string")
      */
     private $severity;
 
     /**
      * @var string
+     * @Annotation\Expose
+     * @Annotation\Type("string")
      */
     private $description;
 

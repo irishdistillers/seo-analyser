@@ -2,22 +2,32 @@
 
 namespace SeoAnalyser\Sitemap;
 
+use JMS\Serializer\Annotation;
 use Tightenco\Collect\Support\Collection;
 
+/**
+ * @Annotation\ExclusionPolicy("all")
+ */
 class Sitemap implements ResourceInterface
 {
     /**
      * @var string
+     * @Annotation\Expose
+     * @Annotation\Type("string")
      */
     protected $url;
 
     /**
      * @var Collection
+     * @Annotation\Expose
+     * @Annotation\Type("iterable<SeoAnalyser\Sitemap\Location>")
      */
     protected $locations;
 
     /**
      * @var Collection
+     * @Annotation\Expose
+     * @Annotation\Type("iterable<SeoAnalyser\Sitemap\Error>")
      */
     protected $errors;
 

@@ -21,6 +21,12 @@ foreach ($container->findTaggedServiceIds('seo_analyser_checker') as $id => $def
     $locationProcessorDefinition->addMethodCall('addChecker', [$definition]);
 }
 
+$formatterFactoryDefinition = $container->findDefinition(\SeoAnalyser\Format\FormatterFactory::class);
+foreach ($container->findTaggedServiceIds('seo_analyser_formatter') as $id => $definition) {
+    $definition = $container->getDefinition($id);
+    $formatterFactoryDefinition->addMethodCall('addFormatter', [$definition]);
+}
+
 $version = 'Version unknown';
 try {
     $version = \Jean85\PrettyVersions::getVersion('irishdistillers/seo-analyser')->getPrettyVersion();

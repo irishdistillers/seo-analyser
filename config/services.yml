@@ -3,14 +3,14 @@ services:
         autowire: true
         autoconfigure: true
 
-    SeoAnalyser\Checker\:
-        resource: './../src/Checker'
-        tags: ['seo_analyser_checker']
+    _instanceof:
+        SeoAnalyser\Checker\CheckerInterface:
+            tags: ['seo_analyser_checker']
+        SeoAnalyser\Format\FormatterInterface:
+            tags: ['seo_analyser_formatter']
 
-    SeoAnalyser\Http\Client: ~
-    SeoAnalyser\Command\AnalyseCommand: ~
-    SeoAnalyser\Command\ListCheckersCommand: ~
-    SeoAnalyser\Processor\LocationProcessor: ~
-    SeoAnalyser\Processor\SitemapProcessor: ~
+    SeoAnalyser\:
+        resource: '../src'
+        exclude: '../src/Sitemap'
   
     GuzzleHttp\Client: ~

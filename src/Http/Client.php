@@ -4,7 +4,7 @@ namespace SeoAnalyser\Http;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Psr\Http\Message\ResponseInterface;
-use SeoAnalyser\Exception\InvalidAuthOptionException;
+use SeoAnalyser\Exception\InvalidOptionException;
 use Tightenco\Collect\Support\Collection;
 
 class Client
@@ -67,7 +67,7 @@ class Client
     {
         foreach ($options as $option) {
             if (!preg_match('/(.*):(.*)@(.*)/', $option, $matches)) {
-                throw new InvalidAuthOptionException(
+                throw new InvalidOptionException(
                     sprintf('Auth option %s is not the right format: user:pwd@host', $option)
                 );
             }

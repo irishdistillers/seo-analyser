@@ -22,6 +22,8 @@ class LocationTest extends TestCase
     {
         $sitemap = new Sitemap('http://example.com/parent');
         $location = new Location('http://example.com', $sitemap);
+        $this->assertTrue($location->hasParent());
+        $this->assertSame($sitemap, $location->getParent());
         $this->assertFalse($location->hasErrors());
 
         $error = new Error('Foo', Error::SEVERITY_NORMAL);

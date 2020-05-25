@@ -12,6 +12,7 @@ class HrefLangCheckerTest extends TestCase
     public function testChecker()
     {
         $checker = new HrefLangChecker;
+        $this->assertEquals('HrefLang', $checker->getName());
 
         $crawler = new Crawler(<<<HTML
 <html>

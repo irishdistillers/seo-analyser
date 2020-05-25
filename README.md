@@ -19,24 +19,18 @@ composer require --dev irishdistillers/seo-analyser
 Usage
 -----
 
-Run by pointing at the root sitemap file:
-
 ```
-bin/seo-analyser analyse http://example.com/sitemap.xml
-```
+Usage:
+  analyse [options] [--] <sitemap_url>
 
-You can provide auth settings on a per-domain basis like
+Arguments:
+  sitemap_url              Sitemap URL
 
-```
-bin/seo-analyser analyse http://example.com/sitemap.xml -a user:pwd@domain.com -a user:pwd@subdomain.example.com
-```
-
-so that any requests to `domain.com` or `subdomain.example.com` will have basic authentication.
-
-You can pick which checkers to use with the `-c` flag:
-
-```
-bin/seo-analyser analyse http://example.com/sitemap.xml -c H1 -c Title
+Options:
+  -a, --auth=AUTH          user:pwd@host (multiple values allowed)
+  -c, --checkers=CHECKERS  List of checkers to use (see the `list-checkers` command for a full list) (multiple values allowed)
+  -f, --format[=FORMAT]    Output format (Text, XML, JSON) [default: "text"]
+  -o, --output[=OUTPUT]    Write to file
 ```
 
 Adding new checks

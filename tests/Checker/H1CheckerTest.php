@@ -12,6 +12,7 @@ class H1CheckerTest extends TestCase
     public function testChecker()
     {
         $checker = new H1Checker;
+        $this->assertEquals('H1', $checker->getName());
 
         $crawler = new Crawler('<html></html>');
         $errors = $checker->check($crawler);

@@ -29,6 +29,7 @@ class MetaDescriptionCheckerTest extends TestCase
         );
 
         $checker = new MetaDescriptionChecker();
+        $this->assertEquals('MetaDescription', $checker->getName());
         $errors = $checker->check($crawler);
         $this->assertCount(0, $errors);
     }
