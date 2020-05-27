@@ -2,6 +2,7 @@
 
 namespace SeoAnalyser\Processor;
 
+use SeoAnalyser\Sitemap\Sitemap;
 use GuzzleHttp\Exception\RequestException;
 use SeoAnalyser\Checker\CheckerInterface;
 use SeoAnalyser\Http\Client;

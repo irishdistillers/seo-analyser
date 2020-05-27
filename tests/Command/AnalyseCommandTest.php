@@ -77,7 +77,7 @@ class AnalyseCommandTest extends TestCase
 Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 0 urls (1 errors)
-Found 1 errors for http://example.com/sitemap.xml
+Found 1 errors for http://example.com/sitemap.xml (parent: None)
 +----------+---------------+
 | Severity | Message       |
 +----------+---------------+
@@ -94,11 +94,10 @@ OUT
     {
         $this->mockClient->expects()->configAuth([]);
 
-        $location = new Location('http://example.com/page-one');
+        $sitemap = new Sitemap('http://example.com/sitemap.xml');
+        $location = new Location('http://example.com/page-one', $sitemap);
         $location->addError(new Error('Missing something important', Error::SEVERITY_HIGH));
         $location->addError(new Error('Missing something no one cares about', Error::SEVERITY_LOW));
-
-        $sitemap = new Sitemap('http://example.com/sitemap.xml');
         $sitemap->addLocation($location);
 
         $this->mockSitemapProcessor->expects()->process(
@@ -120,7 +119,7 @@ OUT
 Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 1 urls (0 errors)
-Found 2 errors for http://example.com/page-one
+Found 2 errors for http://example.com/page-one (parent: http://example.com/sitemap.xml)
 +----------+--------------------------------------+
 | Severity | Message                              |
 +----------+--------------------------------------+
@@ -138,9 +137,8 @@ OUT
     {
         $this->mockClient->expects()->configAuth([]);
 
-        $location = new Location('http://example.com/page-one');
-
         $sitemap = new Sitemap('http://example.com/sitemap.xml');
+        $location = new Location('http://example.com/page-one', $sitemap);
         $sitemap->addLocation($location);
 
         $this->mockSitemapProcessor->expects()->process(

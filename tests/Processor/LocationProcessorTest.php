@@ -10,6 +10,7 @@ use SeoAnalyser\Http\Client;
 use SeoAnalyser\Processor\LocationProcessor;
 use SeoAnalyser\Sitemap\Error;
 use SeoAnalyser\Sitemap\Location;
+use SeoAnalyser\Sitemap\Sitemap;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tests\Checker\AlwaysErrorChecker;
 
@@ -24,7 +25,7 @@ class LocationProcessorTest extends TestCase
         $processor->addChecker(new AlwaysErrorChecker);
 
         $url = 'http://example.com/location';
-        $location = new Location($url);
+        $location = new Location($url, new Sitemap('http://example.com/parent'));
 
         $mockClient->expects()->get($url)->andReturns(new Response);
         $mockOutput->expects()->writeln('Retrieving '.$url, OutputInterface::VERBOSITY_VERBOSE);
@@ -43,7 +44,7 @@ class LocationProcessorTest extends TestCase
         $processor->addChecker(new AlwaysErrorChecker);
 
         $url = 'http://example.com/location';
-        $location = new Location($url);
+        $location = new Location($url, new Sitemap('http://example.com/parent'));
 
         $mockClient->expects()->get($url)->andReturns(new Response(301));
         $mockOutput->expects()->writeln('Retrieving '.$url, OutputInterface::VERBOSITY_VERBOSE);
@@ -65,7 +66,7 @@ class LocationProcessorTest extends TestCase
         $processor->addChecker(new AlwaysErrorChecker);
 
         $url = 'http://example.com/location';
-        $location = new Location($url);
+        $location = new Location($url, new Sitemap('http://example.com/parent'));
 
         $mockClient->expects()->get($url)->andThrows(
             new RequestException(

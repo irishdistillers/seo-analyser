@@ -23,7 +23,7 @@ class SitemapTest extends TestCase
         $sitemap = new Sitemap('http://example.com');
         $this->assertEmpty($sitemap->getLocations());
 
-        $location = new Location('http://example.com/location');
+        $location = new Location('http://example.com/location', $sitemap);
         $sitemap->addLocation($location);
 
         $this->assertCount(1, $sitemap->getLocations());

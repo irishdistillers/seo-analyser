@@ -5,21 +5,23 @@ namespace Tests\Sitemap;
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Sitemap\Error;
 use SeoAnalyser\Sitemap\Location;
+use SeoAnalyser\Sitemap\Sitemap;
 use Tightenco\Collect\Support\Collection;
 
 class LocationTest extends TestCase
 {
     public function testGetUrl()
     {
-        $expected = 'http://example.com';
-        $location = new Location($expected);
+        $expected = 'http://example.com/page';
+        $location = new Location($expected, new Sitemap('http://example.com/parent'));
 
         $this->assertEquals($expected, $location->getUrl());
     }
 
     public function testErrors()
     {
-        $location = new Location('http://example.com');
+        $sitemap = new Sitemap('http://example.com/parent');
+        $location = new Location('http://example.com', $sitemap);
         $this->assertFalse($location->hasErrors());
 
         $error = new Error('Foo', Error::SEVERITY_NORMAL);
@@ -29,7 +31,7 @@ class LocationTest extends TestCase
 
         // --
 
-        $location = new Location('http://example.com');
+        $location = new Location('http://example.com', $sitemap);
         $error = new Error('Foo', Error::SEVERITY_NORMAL);
 
         $expected = new Collection([$error]);

@@ -15,4 +15,8 @@ interface ResourceInterface
     public function addErrors(Collection $errors);
 
     public function getErrors(): Collection;
+
+    public function hasParent(): bool;
+
+    public function getParent(): ResourceInterface;
 }

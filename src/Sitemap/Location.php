@@ -16,11 +16,17 @@ class Location implements ResourceInterface
      */
     private $errors;
 
-    public function __construct(string $url)
+    /**
+     * @var ResourceInterface
+     */
+    protected $parent;
+
+    public function __construct(string $url, Sitemap $parent)
     {
         $this->url = $url;
 
         $this->errors = new Collection;
+        $this->parent = $parent;
     }
 
     public function getUrl()
@@ -46,5 +52,15 @@ class Location implements ResourceInterface
     public function getErrors(): Collection
     {
         return $this->errors;
+    }
+
+    public function hasParent(): bool
+    {
+        return true;
+    }
+
+    public function getParent(): ResourceInterface
+    {
+        return $this->parent;
     }
 }

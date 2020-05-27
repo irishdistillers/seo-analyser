@@ -19,10 +19,17 @@ class ImageAltChecker implements CheckerInterface
 
         /** @var \DomElement $imageNode */
         foreach ($crawler->filterXPath('//img') as $imageNode) {
-            if (empty(trim($imageNode->getAttribute('alt')))) {
+            if (!$imageNode->hasAttribute('alt')) {
                 $errors->push(
                     new Error(
-                        sprintf('Missing or empty <img> alt attribute for %s', $imageNode->getAttribute('src')),
+                        sprintf('Missing <img> alt attribute for %s', $imageNode->getAttribute('src')),
+                        Error::SEVERITY_LOW
+                    )
+                );
+            } elseif (empty(trim($imageNode->getAttribute('alt')))) {
+                $errors->push(
+                    new Error(
+                        sprintf('Empty <img> alt attribute for %s', $imageNode->getAttribute('src')),
                         Error::SEVERITY_LOW
                     )
                 );
