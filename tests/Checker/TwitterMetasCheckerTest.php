@@ -39,10 +39,7 @@ class TwitterMetasCheckerTest extends TestCase
         $this->assertCount(0, $errors);
     }
 
-    /**
-     * @dataProvider provideGoodMetas
-     */
-    public function testPageIsMissingMetas($metas)
+    public function testPageIsMissingMetas()
     {
         $crawler = new Crawler(
             "<html>
@@ -51,6 +48,7 @@ class TwitterMetasCheckerTest extends TestCase
         );
 
         $checker = new TwitterMetasChecker();
+        $this->assertEquals('TwitterMetas', $checker->getName());
         $errors = $checker->check($crawler);
 
         $this->assertCount(4, $errors);

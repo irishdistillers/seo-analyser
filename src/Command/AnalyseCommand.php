@@ -2,18 +2,17 @@
 
 namespace SeoAnalyser\Command;
 
-use SeoAnalyser\Sitemap\Sitemap;
-use SeoAnalyser\Exception\InvalidAuthOptionException;
+use SeoAnalyser\Exception\InvalidOutputFileException;
+use SeoAnalyser\Format\FormatterFactory;
 use SeoAnalyser\Http\Client;
 use SeoAnalyser\Processor\LocationProcessor;
 use SeoAnalyser\Processor\SitemapProcessor;
-use SeoAnalyser\Sitemap\ResourceInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\StreamOutput;
 use Tightenco\Collect\Support\Collection;
 
 class AnalyseCommand extends Command
@@ -39,12 +38,20 @@ class AnalyseCommand extends Command
     private $httpClient;
 
     /**
+     * @var FormatterFactory
+     */
+    private $formatterFactory;
+
+    /**
      * @param SitemapProcessor  $sitemapProcessor
      * @param LocationProcessor $locationProcessor
+     * @param FormatterFactory  $formatterFactory
+     * @param Client            $httpClient
      */
     public function __construct(
         SitemapProcessor $sitemapProcessor,
         LocationProcessor $locationProcessor,
+        FormatterFactory $formatterFactory,
         Client $httpClient
     ) {
         parent::__construct();
@@ -52,6 +59,7 @@ class AnalyseCommand extends Command
         $this->sitemapProcessor = $sitemapProcessor;
         $this->locationProcessor = $locationProcessor;
         $this->httpClient = $httpClient;
+        $this->formatterFactory = $formatterFactory;
     }
 
     /**
@@ -69,6 +77,8 @@ class AnalyseCommand extends Command
                 'List of checkers to use (see the `list-checkers` command for a full list)',
                 []
             )
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format (Text, XML, JSON)', 'text')
+            ->addOption('output', 'o', InputOption::VALUE_OPTIONAL, 'Write to file')
         ;
     }
 
@@ -77,12 +87,8 @@ class AnalyseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $this->httpClient->configAuth($input->getOption('auth'));
-        } catch (InvalidAuthOptionException $exception) {
-            $output->writeln($exception->getMessage());
-            return 1;
-        }
+        $this->httpClient->configAuth($input->getOption('auth'));
+        $formatter = $this->formatterFactory->getFormatter($input->getOption('format'));
 
         $filterCheckers = $input->getOption('checkers');
         if (!empty($filterCheckers)) {
@@ -101,25 +107,16 @@ class AnalyseCommand extends Command
             )
         );
 
-        $sitemaps = $this->processSitemaps($input->getArgument('sitemap_url'), $output);
+        $sitemaps = $this->retrieveSitemaps($input->getArgument('sitemap_url'), $output);
 
-        foreach ($sitemaps as $sitemap) {
-            $this->printErrors($sitemap, $output);
+        $reportOutput = $output;
+        if (!empty($input->getOption('output'))) {
+            $reportOutput = $this->prepareOutput($input->getOption('output'));
         }
 
-        $totalErrors = 0;
-        foreach ($sitemaps as $sitemap) {
-            foreach ($sitemap->getLocations() as $location) {
-                $this->locationProcessor->process($location, $output);
-                $this->printErrors($location, $output);
+        $formatter->extractErrors($sitemaps, $reportOutput);
 
-                $totalErrors += count($location->getErrors());
-            }
-        }
-
-        $output->writeln(sprintf('%d URL errors found', $totalErrors));
-
-        return ($this->countErrors($sitemaps) === 0 && $totalErrors === 0) ? 0 : 1;
+        return $formatter->hasErrors() ? 1 : 0;
     }
 
     /**
@@ -127,7 +124,7 @@ class AnalyseCommand extends Command
      * @param  OutputInterface $output
      * @return Collection
      */
-    public function processSitemaps(string $url, OutputInterface $output): Collection
+    public function retrieveSitemaps(string $url, OutputInterface $output): Collection
     {
         $output->writeln('Retrieving sitemaps');
         $sitemaps = $this->sitemapProcessor->process($url, $output);
@@ -143,35 +140,22 @@ class AnalyseCommand extends Command
             $this->countErrors($sitemaps)
         ));
 
+        foreach ($sitemaps as $sitemap) {
+            foreach ($sitemap->getLocations() as $location) {
+                $this->locationProcessor->process($location, $output);
+            }
+        }
+
         return $sitemaps;
     }
 
-    /**
-     * @param  ResourceInterface $resource
-     * @param  OutputInterface   $output
-     */
-    private function printErrors(ResourceInterface $resource, OutputInterface $output)
+    protected function prepareOutput(string $path)
     {
-        if ($resource->hasErrors()) {
-            $output->writeln(
-                sprintf(
-                    'Found %d errors for %s (parent: %s)',
-                    count($resource->getErrors()),
-                    $resource->getUrl(),
-                    $resource->hasParent() ? $resource->getParent()->getUrl() : 'None'
-                )
-            );
-
-            $table = new Table($output);
-            $table->setHeaders(['Severity', 'Message']);
-
-            foreach ($resource->getErrors() as $error) {
-                $table->addRow([$error->getSeverity(), $error->getDescription()]);
-            }
-
-            $table->render();
-            $output->writeln('');
+        if (file_exists($path) && !is_writable($path)) {
+            throw new InvalidOutputFileException(sprintf('File %s is not writable', $path));
         }
+
+        return new StreamOutput(fopen($path, 'w', false));
     }
 
     /**

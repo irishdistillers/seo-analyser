@@ -38,14 +38,12 @@ class OpenGraphMetasCheckerTest extends TestCase
         );
 
         $checker = new OpenGraphMetasChecker();
+        $this->assertEquals('OpenGraphMetas', $checker->getName());
         $errors = $checker->check($crawler);
         $this->assertCount(0, $errors);
     }
 
-    /**
-     * @dataProvider provideGoodMetas
-     */
-    public function testPageIsMissingOgMetas($metas)
+    public function testPageIsMissingOgMetas()
     {
         $crawler = new Crawler(
             '<html>

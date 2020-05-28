@@ -12,6 +12,7 @@ class ImageAltCheckerTest extends TestCase
     public function testChecker()
     {
         $checker = new ImageAltChecker;
+        $this->assertEquals('ImageAlt', $checker->getName());
 
         $crawler = new Crawler(
             '<html><img src="one.jpg" alt="Alt text"/><img src="two.jpg" alt=" "/><img src="three.jpg"/></html>'

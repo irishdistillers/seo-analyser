@@ -2,17 +2,25 @@
 
 namespace SeoAnalyser\Sitemap;
 
+use JMS\Serializer\Annotation;
 use Tightenco\Collect\Support\Collection;
 
+/**
+ * @Annotation\ExclusionPolicy("all")
+ */
 class Location implements ResourceInterface
 {
     /**
      * @var string
+     * @Annotation\Expose
+     * @Annotation\Type("string")
      */
     private $url;
 
     /**
      * @var Collection
+     * @Annotation\Expose
+     * @Annotation\Type("iterable<SeoAnalyser\Sitemap\Error>")
      */
     private $errors;
 

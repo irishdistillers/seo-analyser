@@ -49,4 +49,15 @@ class SitemapTest extends TestCase
         $sitemap->addErrors($expected);
         $this->assertEquals($expected, $sitemap->getErrors());
     }
+
+    public function testParent()
+    {
+        $parent = new Sitemap('http://example.com/sitemap.xml');
+        $child = new Sitemap('http://example.com/en-EN/sitemap.xml');
+
+        $this->assertFalse($child->hasParent());
+        $child->setParent($parent);
+        $this->assertTrue($child->hasParent());
+        $this->assertSame($parent, $child->getParent());
+    }
 }

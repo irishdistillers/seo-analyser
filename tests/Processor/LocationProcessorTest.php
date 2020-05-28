@@ -13,12 +13,33 @@ use SeoAnalyser\Sitemap\Location;
 use SeoAnalyser\Sitemap\Sitemap;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tests\Checker\AlwaysErrorChecker;
+use SeoAnalyser\Checker\H1Checker;
+use SeoAnalyser\Checker\HrefLangChecker;
 
 class LocationProcessorTest extends TestCase
 {
+    public function testFilterCheckers()
+    {
+        /** @var \Mockery\MockInterface|Client */
+        $mockClient = \Mockery::mock(Client::class);
+
+        $processor = new LocationProcessor($mockClient);
+        $processor->addChecker(new AlwaysErrorChecker);
+        $processor->addChecker(new H1Checker);
+        $processor->addChecker(new HrefLangChecker);
+
+        $processor->filterCheckers(['H1']);
+
+        $this->assertEquals([1 => 'H1'], $processor->getCheckers()->map(function ($checker) {
+            return $checker->getName();
+        })->toArray());
+    }
+
     public function testProcessSuccess()
     {
+        /** @var \Mockery\MockInterface|Client */
         $mockClient = \Mockery::mock(Client::class);
+        /** @var \Mockery\MockInterface|OutputInterface */
         $mockOutput = \Mockery::mock(OutputInterface::class);
 
         $processor = new LocationProcessor($mockClient);
@@ -37,7 +58,9 @@ class LocationProcessorTest extends TestCase
 
     public function testProcessHttpError()
     {
+        /** @var \Mockery\MockInterface|Client */
         $mockClient = \Mockery::mock(Client::class);
+        /** @var \Mockery\MockInterface|OutputInterface */
         $mockOutput = \Mockery::mock(OutputInterface::class);
 
         $processor = new LocationProcessor($mockClient);
@@ -59,7 +82,9 @@ class LocationProcessorTest extends TestCase
 
     public function testProcessRequestError()
     {
+        /** @var \Mockery\MockInterface|Client */
         $mockClient = \Mockery::mock(Client::class);
+        /** @var \Mockery\MockInterface|OutputInterface */
         $mockOutput = \Mockery::mock(OutputInterface::class);
 
         $processor = new LocationProcessor($mockClient);

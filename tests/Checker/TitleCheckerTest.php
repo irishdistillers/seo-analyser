@@ -12,6 +12,7 @@ class TitleCheckerTest extends TestCase
     public function testChecker()
     {
         $checker = new TitleChecker;
+        $this->assertEquals('Title', $checker->getName());
 
         $crawler = new Crawler('<html><body><title>Title</title></body></html>');
         $errors = $checker->check($crawler);

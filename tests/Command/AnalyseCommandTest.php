@@ -2,10 +2,10 @@
 
 namespace Tests\Command;
 
-use \Mockery;
+use SeoAnalyser\Format\FormatterFactory;
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Command\AnalyseCommand;
-use SeoAnalyser\Exception\InvalidAuthOptionException;
+use SeoAnalyser\Exception\InvalidOptionException;
 use SeoAnalyser\Http\Client;
 use SeoAnalyser\Processor\LocationProcessor;
 use SeoAnalyser\Processor\SitemapProcessor;
@@ -19,16 +19,56 @@ use Tightenco\Collect\Support\Collection;
 
 class AnalyseCommandTest extends TestCase
 {
+    /**
+     * @var \Mockery\MockInterface|\SeoAnalyser\Processor\SitemapProcessor
+     */
+    private $mockSitemapProcessor;
+
+    /**
+     * @var \Mockery\MockInterface|\SeoAnalyser\Processor\LocationProcessor
+     */
+    private $mockLocationProcessor;
+
+    /**
+     * @var FormatterFactory
+     */
+    private $formatterFactory;
+
+    /**
+     * @var \Mockery\MockInterface|\SeoAnalyser\Http\Client
+     */
+    private $mockClient;
+
+    /**
+     * @var AnalyseCommand
+     */
+    private $command;
+
+    /**
+     * @var CommandTester
+     */
+    private $commandTester;
+
     public function setUp(): void
     {
-        $this->mockSitemapProcessor = Mockery::mock(SitemapProcessor::class);
-        $this->mockLocationProcessor = Mockery::mock(LocationProcessor::class, ['getCheckers' => new Collection([])]);
-        $this->mockClient = Mockery::mock(Client::class);
+        /** @var \Mockery\MockInterface|\SeoAnalyser\Processor\SitemapProcessor */
+        $this->mockSitemapProcessor = \Mockery::mock(SitemapProcessor::class);
+
+        /** @var \Mockery\MockInterface|\SeoAnalyser\Processor\LocationProcessor */
+        $this->mockLocationProcessor = \Mockery::mock(LocationProcessor::class);
+        $this->mockLocationProcessor->allows()->getCheckers()->andReturns(new Collection);
+
+        $this->formatterFactory = new FormatterFactory;
+        $this->formatterFactory->addFormatter(new \Tests\Format\DummyFormatter);
+        
+        /** @var \Mockery\MockInterface|\SeoAnalyser\Http\Client */
+        $this->mockClient = \Mockery::mock(Client::class);
 
         $application = new Application();
         $application->add(new AnalyseCommand(
             $this->mockSitemapProcessor,
             $this->mockLocationProcessor,
+            $this->formatterFactory,
             $this->mockClient
         ));
 
@@ -38,8 +78,9 @@ class AnalyseCommandTest extends TestCase
 
     public function testInvalidAuthConfig()
     {
+        $this->expectException(InvalidOptionException::class);
         $this->mockClient->expects()->configAuth(['invalid-auth'])
-            ->andThrows(new InvalidAuthOptionException('Invalid auth'))
+            ->andThrows(new InvalidOptionException('Invalid auth'))
         ;
         
         $this->commandTester->execute([
@@ -47,10 +88,6 @@ class AnalyseCommandTest extends TestCase
             'sitemap_url' => 'http://example.com/sitemap.xml',
             '--auth' => ['invalid-auth']
         ]);
-
-        $output = $this->commandTester->getDisplay();
-
-        $this->assertEquals(1, $this->commandTester->getStatusCode());
     }
 
     public function testSitemapErrors()
@@ -62,12 +99,13 @@ class AnalyseCommandTest extends TestCase
 
         $this->mockSitemapProcessor->expects()->process(
             'http://example.com/sitemap.xml',
-            Mockery::type(OutputInterface::class)
+            \Mockery::type(OutputInterface::class)
         )->andReturns(new Collection([$sitemap]));
         
         $this->commandTester->execute([
             'command' => $this->command->getName(),
-            'sitemap_url' => 'http://example.com/sitemap.xml'
+            'sitemap_url' => 'http://example.com/sitemap.xml',
+            '--format' => 'dummy'
         ]);
 
         $output = $this->commandTester->getDisplay();
@@ -77,14 +115,6 @@ class AnalyseCommandTest extends TestCase
 Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 0 urls (1 errors)
-Found 1 errors for http://example.com/sitemap.xml (parent: None)
-+----------+---------------+
-| Severity | Message       |
-+----------+---------------+
-| Normal   | Error message |
-+----------+---------------+
-
-0 URL errors found
 
 OUT
 , $output);
@@ -102,14 +132,15 @@ OUT
 
         $this->mockSitemapProcessor->expects()->process(
             'http://example.com/sitemap.xml',
-            Mockery::type(OutputInterface::class)
+            \Mockery::type(OutputInterface::class)
         )->andReturns(new Collection([$sitemap]));
 
-        $this->mockLocationProcessor->expects()->process($location, Mockery::type(OutputInterface::class));
+        $this->mockLocationProcessor->expects()->process($location, \Mockery::type(OutputInterface::class));
         
         $this->commandTester->execute([
             'command' => $this->command->getName(),
-            'sitemap_url' => 'http://example.com/sitemap.xml'
+            'sitemap_url' => 'http://example.com/sitemap.xml',
+            '--format' => 'dummy'
         ]);
 
         $output = $this->commandTester->getDisplay();
@@ -119,18 +150,19 @@ OUT
 Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 1 urls (0 errors)
-Found 2 errors for http://example.com/page-one (parent: http://example.com/sitemap.xml)
-+----------+--------------------------------------+
-| Severity | Message                              |
-+----------+--------------------------------------+
-| High     | Missing something important          |
-| Low      | Missing something no one cares about |
-+----------+--------------------------------------+
-
-2 URL errors found
 
 OUT
 , $output);
+
+        /** @var \Tests\Format\DummyFormatter $formatter */
+        $formatter = $this->formatterFactory->getFormatter('dummy');
+        $errors = $formatter->getErrors();
+
+        $this->assertCount(1, $errors);
+        $this->assertEquals([
+            'url' => 'http://example.com/page-one',
+            'errors' => ['Low', 'Missing something no one cares about']
+        ], $errors[0]);
     }
 
     public function testNoErrors()
@@ -143,14 +175,15 @@ OUT
 
         $this->mockSitemapProcessor->expects()->process(
             'http://example.com/sitemap.xml',
-            Mockery::type(OutputInterface::class)
+            \Mockery::type(OutputInterface::class)
         )->andReturns(new Collection([$sitemap]));
 
-        $this->mockLocationProcessor->expects()->process($location, Mockery::type(OutputInterface::class));
+        $this->mockLocationProcessor->expects()->process($location, \Mockery::type(OutputInterface::class));
         
         $this->commandTester->execute([
             'command' => $this->command->getName(),
-            'sitemap_url' => 'http://example.com/sitemap.xml'
+            'sitemap_url' => 'http://example.com/sitemap.xml',
+            '--format' => 'dummy'
         ]);
 
         $output = $this->commandTester->getDisplay();
@@ -160,14 +193,19 @@ OUT
 Using checkers: 
 Retrieving sitemaps
 Found 1 sitemaps with 1 urls (0 errors)
-0 URL errors found
 
 OUT
 , $output);
+
+        /** @var \Tests\Format\DummyFormatter $formatter */
+        $formatter = $this->formatterFactory->getFormatter('dummy');
+        $errors = $formatter->getErrors();
+
+        $this->assertCount(0, $errors);
     }
 
     public function tearDown(): void
     {
-        Mockery::close();
+        \Mockery::close();
     }
 }
