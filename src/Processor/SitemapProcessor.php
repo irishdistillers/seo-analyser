@@ -4,9 +4,9 @@ namespace SeoAnalyser\Processor;
 
 use GuzzleHttp\Exception\RequestException;
 use SeoAnalyser\Http\Client;
-use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Sitemap\Location;
-use SeoAnalyser\Sitemap\Sitemap;
+use SeoAnalyser\Resource\Error;
+use SeoAnalyser\Resource\Location;
+use SeoAnalyser\Resource\Sitemap;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tightenco\Collect\Support\Collection;
 
@@ -72,6 +72,10 @@ class SitemapProcessor
         return $sitemaps->merge([$sitemap]);
     }
 
+    /**
+     * @param  Sitemap          $sitemap
+     * @param  RequestException $exception
+     */
     private function logExceptionError(Sitemap $sitemap, RequestException $exception)
     {
         if ($exception->getResponse()) {

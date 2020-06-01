@@ -2,11 +2,15 @@
 
 namespace SeoAnalyser\Checker;
 
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 trait ValidatorTrait
 {
+    /**
+     * @param  ConstraintViolationList $violations
+     * @param  string                  $severity
+     */
     public function pushViolationsErrors(
         ConstraintViolationList $violations,
         string $severity

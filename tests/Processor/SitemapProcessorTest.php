@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Http\Client;
 use SeoAnalyser\Processor\SitemapProcessor;
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SitemapProcessorTest extends TestCase

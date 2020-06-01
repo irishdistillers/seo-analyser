@@ -2,20 +2,20 @@
 
 namespace SeoAnalyser\Format;
 
-use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tightenco\Collect\Support\Collection;
+use Twig\Environment;
 
-class JsonFormatter implements FormatterInterface
+class HtmlFormatter implements FormatterInterface
 {
     /**
-     * @var \JMS\Serializer\SerializerInterface
+     * @var \Twig\Environment
      */
-    private $serializer;
+    private $twig;
 
-    public function __construct(SerializerBuilder $builder)
+    public function __construct(Environment $twig)
     {
-        $this->serializer = $builder->build();
+        $this->twig = $twig;
     }
 
     /**
@@ -23,7 +23,7 @@ class JsonFormatter implements FormatterInterface
      */
     public function getName(): string
     {
-        return 'json';
+        return 'html';
     }
 
     /**
@@ -31,6 +31,8 @@ class JsonFormatter implements FormatterInterface
      */
     public function extractErrors(Collection $sitemaps, OutputInterface $output)
     {
-        $output->writeln($this->serializer->serialize($sitemaps->all(), 'json'));
+        $template = $this->twig->load('report.html.twig');
+
+        $output->write($template->render(['sitemaps' => $sitemaps]));
     }
 }

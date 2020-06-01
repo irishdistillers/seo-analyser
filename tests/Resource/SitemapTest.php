@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Sitemap;
+namespace Tests\Resource;
 
 use PHPUnit\Framework\TestCase;
-use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Sitemap\Location;
-use SeoAnalyser\Sitemap\Sitemap;
+use SeoAnalyser\Resource\Error;
+use SeoAnalyser\Resource\Location;
+use SeoAnalyser\Resource\Sitemap;
 use Tightenco\Collect\Support\Collection;
 
 class SitemapTest extends TestCase

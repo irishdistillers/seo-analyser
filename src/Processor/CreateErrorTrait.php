@@ -3,8 +3,8 @@
 namespace SeoAnalyser\Processor;
 
 use Psr\Http\Message\ResponseInterface;
-use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Sitemap\ResourceInterface;
+use SeoAnalyser\Resource\Error;
+use SeoAnalyser\Resource\ResourceInterface;
 
 trait CreateErrorTrait
 {

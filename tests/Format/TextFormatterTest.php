@@ -4,9 +4,9 @@ namespace Tests\Format;
 
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Format\TextFormatter;
-use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Sitemap\Location;
-use SeoAnalyser\Sitemap\Sitemap;
+use SeoAnalyser\Resource\Error;
+use SeoAnalyser\Resource\Location;
+use SeoAnalyser\Resource\Sitemap;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tightenco\Collect\Support\Collection;
 
@@ -26,7 +26,6 @@ class TextFormatterTest extends TestCase
         $formatter->extractErrors(new Collection(), $output);
 
         $this->assertEquals('', $output->fetch());
-        $this->assertFalse($formatter->hasErrors());
     }
 
     public function testExtractErrorsWithErrors()
@@ -65,6 +64,5 @@ Found 1 errors for http://example.com/page-one
 OUT,
             $output->fetch()
         );
-        $this->assertTrue($formatter->hasErrors());
     }
 }

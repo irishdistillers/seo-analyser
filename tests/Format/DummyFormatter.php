@@ -2,7 +2,7 @@
 
 namespace Tests\Format;
 
-use SeoAnalyser\Sitemap\ResourceInterface;
+use SeoAnalyser\Resource\ResourceInterface;
 use SeoAnalyser\Format\FormatterInterface;
 use Tightenco\Collect\Support\Collection;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,10 +27,10 @@ class DummyFormatter implements FormatterInterface
      */
     public function extractErrors(Collection $sitemaps, OutputInterface $output)
     {
-        /** @var \SeoAnalyser\Sitemap\Sitemap $sitemap */
+        /** @var \SeoAnalyser\Resource\Sitemap $sitemap */
         foreach ($sitemaps as $sitemap) {
             $this->storeErrors($sitemap);
-            /** @var \SeoAnalyser\Sitemap\Location $location */
+            /** @var \SeoAnalyser\Resource\Location $location */
             foreach ($sitemap->getLocations() as $location) {
                 $this->storeErrors($location);
             }

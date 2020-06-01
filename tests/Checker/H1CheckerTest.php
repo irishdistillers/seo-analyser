@@ -4,7 +4,7 @@ namespace Tests\Checker;
 
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Checker\H1Checker;
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 use Symfony\Component\DomCrawler\Crawler;
 
 class H1CheckerTest extends TestCase

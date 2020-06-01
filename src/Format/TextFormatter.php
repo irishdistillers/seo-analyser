@@ -2,18 +2,13 @@
 
 namespace SeoAnalyser\Format;
 
-use SeoAnalyser\Sitemap\ResourceInterface;
+use SeoAnalyser\Resource\ResourceInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tightenco\Collect\Support\Collection;
 
 class TextFormatter implements FormatterInterface
 {
-    /**
-     * @var boolean
-     */
-    private $hasErrors = false;
-
     /**
      * {@inheritDoc}
      */
@@ -27,10 +22,8 @@ class TextFormatter implements FormatterInterface
      */
     public function extractErrors(Collection $sitemaps, OutputInterface $output)
     {
-        /** @var \SeoAnalyser\Sitemap\Sitemap $sitemap */
         foreach ($sitemaps as $sitemap) {
             $this->printErrors($sitemap, $output);
-            /** @var \SeoAnalyser\Sitemap\Location $location */
             foreach ($sitemap->getLocations() as $location) {
                 $this->printErrors($location, $output);
             }
@@ -41,11 +34,11 @@ class TextFormatter implements FormatterInterface
      * Outputs errors for a $resource
      *
      * @param  ResourceInterface $resource
+     * @param  OutputInterface   $output
      */
     private function printErrors(ResourceInterface $resource, OutputInterface $output)
     {
         if ($resource->hasErrors()) {
-            $this->hasErrors = true;
             $output->writeln(
                 sprintf('Found %d errors for %s', count($resource->getErrors()), $resource->getUrl())
             );
@@ -60,13 +53,5 @@ class TextFormatter implements FormatterInterface
             $table->render();
             $output->writeln('');
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasErrors(): bool
-    {
-        return $this->hasErrors;
     }
 }

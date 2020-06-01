@@ -2,7 +2,7 @@
 
 namespace SeoAnalyser\Checker;
 
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 use Symfony\Component\DomCrawler\Crawler;
 use Tightenco\Collect\Support\Collection;
 

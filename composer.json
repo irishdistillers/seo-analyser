@@ -12,7 +12,8 @@
         "symfony/dependency-injection": "^3.4",
         "symfony/dom-crawler": "^3.4",
         "symfony/validator": "^3.4",
-        "tightenco/collect": "^5.5"
+        "tightenco/collect": "^5.5",
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.2",

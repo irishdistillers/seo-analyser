@@ -5,7 +5,7 @@ namespace SeoAnalyser\Processor;
 use GuzzleHttp\Exception\RequestException;
 use SeoAnalyser\Checker\CheckerInterface;
 use SeoAnalyser\Http\Client;
-use SeoAnalyser\Sitemap\Location;
+use SeoAnalyser\Resource\Location;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Tightenco\Collect\Support\Collection;
@@ -39,6 +39,9 @@ class LocationProcessor
         $this->checkers->push($checker);
     }
 
+    /**
+     * @return Collection<CheckerInterface>
+     */
     public function getCheckers(): Collection
     {
         return $this->checkers;

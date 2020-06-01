@@ -4,34 +4,34 @@ namespace Tests\Format;
 
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Format\JsonFormatter;
-use SeoAnalyser\Sitemap\Error;
-use SeoAnalyser\Sitemap\Location;
-use SeoAnalyser\Sitemap\Sitemap;
+use SeoAnalyser\Resource\Error;
+use SeoAnalyser\Resource\Location;
+use SeoAnalyser\Resource\Sitemap;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tightenco\Collect\Support\Collection;
+use JMS\Serializer\SerializerBuilder;
 
 class JsonFormatterTest extends TestCase
 {
     public function testGetName()
     {
-        $formatter = new JsonFormatter;
+        $formatter = new JsonFormatter(SerializerBuilder::create());
         $this->assertEquals('json', $formatter->getName());
     }
 
     public function testExtractErrorsEmpty()
     {
-        $formatter = new JsonFormatter;
+        $formatter = new JsonFormatter(SerializerBuilder::create());
         $output = new BufferedOutput;
 
         $formatter->extractErrors(new Collection(), $output);
 
         $this->assertJsonStringEqualsJsonString('[]', $output->fetch());
-        $this->assertFalse($formatter->hasErrors());
     }
 
     public function testExtractErrorsWithErrors()
     {
-        $formatter = new JsonFormatter;
+        $formatter = new JsonFormatter(SerializerBuilder::create());
         $output = new BufferedOutput;
 
         $sitemap = new Sitemap('http://example.com/sitemap.xml');
@@ -51,23 +51,5 @@ class JsonFormatterTest extends TestCase
             '"description":"Some error"}]}]',
             $output->fetch()
         );
-    }
-
-    public function testHasErrors()
-    {
-        $formatter = new JsonFormatter;
-        $output = new BufferedOutput;
-
-        $sitemap = new Sitemap('http://example.com/sitemap.xml');
-
-        $location = new Location('http://example.com/page-one', $sitemap);
-        $location->addError(new Error('Some location error', Error::SEVERITY_HIGH));
-        $sitemap->addLocation($location);
-
-        $sitemaps = new Collection;
-        $sitemaps->push($sitemap);
-        $formatter->extractErrors($sitemaps, $output);
-
-        $this->assertTrue($formatter->hasErrors());
     }
 }

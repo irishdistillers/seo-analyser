@@ -11,6 +11,19 @@ services:
 
     SeoAnalyser\:
         resource: '../src'
-        exclude: '../src/Sitemap'
+        exclude: '../src/Resource/'
   
     GuzzleHttp\Client: ~
+
+    JMS\Serializer\SerializerBuilder:
+        factory: ['JMS\Serializer\SerializerBuilder', 'create']
+
+    Twig\Loader\FilesystemLoader:
+        $paths: 'src/Resources/views'
+
+    Twig\Environment:
+        $loader: '@Twig\Loader\FilesystemLoader'
+        calls:
+            - [addExtension, ['@SeoAnalyser\Twig\SanitiseExtension']]
+            - [addExtension, ['@SeoAnalyser\Twig\SeverityExtension']]
+        
