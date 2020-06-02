@@ -4,7 +4,7 @@ namespace Tests\Checker;
 
 use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Checker\TwitterMetasChecker;
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 use Symfony\Component\DomCrawler\Crawler;
 
 class TwitterMetasCheckerTest extends TestCase

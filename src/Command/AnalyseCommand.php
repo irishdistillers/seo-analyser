@@ -2,6 +2,7 @@
 
 namespace SeoAnalyser\Command;
 
+use SeoAnalyser\Resource\Sitemap;
 use SeoAnalyser\Exception\InvalidOutputFileException;
 use SeoAnalyser\Format\FormatterFactory;
 use SeoAnalyser\Http\Client;
@@ -77,7 +78,7 @@ class AnalyseCommand extends Command
                 'List of checkers to use (see the `list-checkers` command for a full list)',
                 []
             )
-            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format (Text, XML, JSON)', 'text')
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format (text, xml, json, html)', 'text')
             ->addOption('output', 'o', InputOption::VALUE_OPTIONAL, 'Write to file')
         ;
     }
@@ -116,13 +117,13 @@ class AnalyseCommand extends Command
 
         $formatter->extractErrors($sitemaps, $reportOutput);
 
-        return $formatter->hasErrors() ? 1 : 0;
+        return $this->sitemapsHaveErrors($sitemaps) ? 1 : 0;
     }
 
     /**
      * @param  string          $url
      * @param  OutputInterface $output
-     * @return Collection
+     * @return Collection<Sitemap>
      */
     public function retrieveSitemaps(string $url, OutputInterface $output): Collection
     {
@@ -149,7 +150,32 @@ class AnalyseCommand extends Command
         return $sitemaps;
     }
 
-    protected function prepareOutput(string $path)
+    /**
+     * @param  Collection<Sitemap> $sitemaps
+     * @return bool
+     */
+    protected function sitemapsHaveErrors(Collection $sitemaps): bool
+    {
+        foreach ($sitemaps as $sitemap) {
+            if ($sitemap->hasErrors()) {
+                return true;
+            }
+
+            foreach ($sitemap->getLocations() as $location) {
+                if ($location->hasErrors()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  string $path
+     * @return StreamOutput
+     */
+    protected function prepareOutput(string $path): StreamOutput
     {
         if (file_exists($path) && !is_writable($path)) {
             throw new InvalidOutputFileException(sprintf('File %s is not writable', $path));
@@ -159,7 +185,7 @@ class AnalyseCommand extends Command
     }
 
     /**
-     * @param  Collection $collection
+     * @param  Collection<\SeoAnalyser\Resource\Error> $collection
      * @return int
      */
     private function countErrors(Collection $collection): int

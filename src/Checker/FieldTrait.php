@@ -2,11 +2,16 @@
 
 namespace SeoAnalyser\Checker;
 
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 use Symfony\Component\DomCrawler\Crawler;
 
 trait FieldTrait
 {
+    /**
+     * @param  string  $fieldTagName
+     * @param  string  $fieldType
+     * @return Crawler
+     */
     public function isFieldAvailable(
         string $fieldTagName,
         string $fieldType = 'name'

@@ -16,13 +16,9 @@ interface FormatterInterface
 
     /**
      * Saves errors to a medium in the format determined by the formatter
+     *
+     * @param Collection<\SeoAnalyser\Resource\Sitemap> $sitemaps
+     * @param OutputInterface                          $output
      */
     public function extractErrors(Collection $sitemaps, OutputInterface $output);
-
-    /**
-     * Returns whether errors have been retrieved so far
-     *
-     * @return boolean
-     */
-    public function hasErrors(): bool;
 }

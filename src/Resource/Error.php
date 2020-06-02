@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SeoAnalyser\Sitemap;
+namespace SeoAnalyser\Resource;
 
 use JMS\Serializer\Annotation;
 
@@ -44,11 +44,17 @@ class Error
         $this->severity = $severity;
     }
 
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    /**
+     * @return string
+     */
     public function getSeverity(): string
     {
         return $this->severity;

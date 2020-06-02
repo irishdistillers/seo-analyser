@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Sitemap;
+namespace Tests\Resource;
 
 use PHPUnit\Framework\TestCase;
-use SeoAnalyser\Sitemap\Error;
+use SeoAnalyser\Resource\Error;
 
 class ErrorTest extends TestCase
 {
