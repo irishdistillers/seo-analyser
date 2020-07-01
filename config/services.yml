@@ -26,4 +26,5 @@ services:
         calls:
             - [addExtension, ['@SeoAnalyser\Twig\SanitiseExtension']]
             - [addExtension, ['@SeoAnalyser\Twig\SeverityExtension']]
+            - [addExtension, ['@SeoAnalyser\Twig\VersionExtension']]
         

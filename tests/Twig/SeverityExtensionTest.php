@@ -2,9 +2,9 @@
 
 namespace Tests\Format;
 
+use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Resource\Error;
 use SeoAnalyser\Resource\Location;
-use PHPUnit\Framework\TestCase;
 use SeoAnalyser\Resource\Sitemap;
 use SeoAnalyser\Twig\SeverityExtension;
 use Tightenco\Collect\Support\Collection;
