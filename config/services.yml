@@ -19,7 +19,7 @@ services:
         factory: ['JMS\Serializer\SerializerBuilder', 'create']
 
     Twig\Loader\FilesystemLoader:
-        $paths: 'src/Resources/views'
+        $paths: "%bin_path%/../src/Resources/views"
 
     Twig\Environment:
         $loader: '@Twig\Loader\FilesystemLoader'

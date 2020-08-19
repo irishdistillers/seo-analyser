@@ -13,6 +13,7 @@ require_once './vendor/autoload.php';
 $container = new ContainerBuilder;
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../config/'));
 $loader->load('services.yml');
+$container->setParameter('bin_path', __DIR__);
 $container->compile();
 
 $locationProcessorDefinition = $container->findDefinition(\SeoAnalyser\Processor\LocationProcessor::class);
